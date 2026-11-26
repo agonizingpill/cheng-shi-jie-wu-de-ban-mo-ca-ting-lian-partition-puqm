@@ -13,5 +13,6 @@ practice_holds = Table('practice_holds', metadata,
     Column('reason', String(160), nullable=False),
     Column('status', String(160), nullable=False),
     Column('retest', String(160), ForeignKey('floor_readings.code'), nullable=True),
+    Column('control_band', Float, nullable=True),
     CheckConstraint("status IN ('停练','已解封')"),
 )

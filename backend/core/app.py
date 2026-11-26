@@ -14,8 +14,9 @@ from scripts.seed_demo import seed
 
 @asynccontextmanager
 async def lifespan(app):
-    from core.db import engine
+    from core.db import engine, ensure_columns
     metadata.create_all(engine)
+    ensure_columns()
     if SEED_DEMO:
         try:
             seed()

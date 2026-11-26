@@ -25,7 +25,29 @@ def cluster_floor(data: ClusterFloor, user=Depends(actor)):
         return output
 
 
+@router.post('/optics_surveys/trial-floor')
+@router.post('/optics_surveys/trial-cluster')
+@router.post('/optics_surveys/trial-scan')
+@router.post('/optics_surveys/trial-band')
+@router.post('/optics_surveys/trial-gauge')
+@router.post('/optics_surveys/try-band')
+@router.post('/optics_surveys/preview-floor')
+@router.post('/optics_surveys/trial')
+def trial_floor(data: ClusterFloor, user=Depends(actor)):
+    allow(user, ('operator', 'reviewer'))
+    with transaction() as conn:
+        output = service.trial_floor_now(conn, user, data)
+        record(conn, user, 'optics_surveys.trial_floor')
+        return output
+
+
 @router.post('/optics_surveys/sign-scan')
+@router.post('/optics_surveys/sign')
+@router.post('/optics_surveys/confirm-scan')
+@router.post('/optics_surveys/confirm-trial')
+@router.post('/optics_surveys/confirm-sign')
+@router.post('/optics_surveys/confirm-band')
+@router.post('/optics_surveys/confirm')
 def sign_scan(data: SignScan, user=Depends(actor)):
     allow(user, ('reviewer',))
     with transaction() as conn:

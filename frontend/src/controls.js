@@ -10,13 +10,14 @@ function input(field) {
     el('option',{value:'false', selected:fallback(field) === false ? '' : undefined},'否'));
   if (field.kind === 'json') return el('textarea', {name:field.name, required:''}, JSON.stringify(fallback(field), null, 2));
   const numeric = ['int','float'].includes(field.kind);
-  return el('input',{name:field.name, required:'', type:numeric ? 'number' : 'text',
+  return el('input',{name:field.name, required:field.optional ? undefined : '', type:numeric ? 'number' : 'text',
     step:field.kind === 'float' ? 'any' : undefined, value:fallback(field) ?? ''});
 }
 function parse(form, fields) {
   const data = new FormData(form);
   return Object.fromEntries(fields.map(field => {
     const raw = data.get(field.name);
+    if (field.optional && (raw === null || raw === '')) return [field.name, null];
     const convert = ['int','float'].includes(field.kind) ? Number :
       ['bool','json'].includes(field.kind) ? JSON.parse : String;
     return [field.name, convert(raw)];
@@ -42,6 +43,9 @@ export function actionForm(action, refresh) {
           notice.textContent = COMPUTE_STATES[current.status] || current.status;
         });
         if (result.status === 'rejected') throw new Error(result.detail);
+        document.querySelectorAll('input[name="token"]').forEach(input => {
+          input.value = data.token;
+        });
         notice.textContent = '任务 ' + data.token + ' · ' + display(result.result);
       } else {
         notice.textContent = action.success + ' · ' + display(data.code ?? data.status);

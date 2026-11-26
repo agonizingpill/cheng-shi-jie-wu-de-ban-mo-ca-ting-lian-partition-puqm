@@ -22,6 +22,14 @@
 6. 18:00 在蓝 B 开课，之后对粉 A 的同坐标做 SUR-E-02 复测。
 7. 19:10 审核复测，保留原围挡历史与当前解封状态。
 
+### 关注线试算、签认切换与围挡口径
+
+- 复核员可在分析页给 `/optics_surveys/cluster-floor` 附带 `control_band` 试调关注线；该线只进入计算凭证，试算期间不写 `studio_panels.control_band`，排课/调区照常。低于试调线的踏点仍先写入 `low_points` 单列，其余点进 `members` 分组。
+- 同批（同分区同 `survey`）若在试算后补录并复核踏点，签认时以已复核踏点快照比对，过期试算返回 409，须重新试算。
+- `/optics_surveys/sign-scan`（等价别名 `/optics_surveys/confirm`、`/confirm-scan`、`/confirm-trial`）在同一事务内把试算关注线写入 `studio_panels.control_band`、把分析簿编号写入 `studio_panels.active_review` 并保存 `optics_surveys`（含签认时的 `control_band`）。同一 `token` 重复确认直接返回原签认，不新增记录。
+- 新签认切换后，旧分析簿不可再 `/practice_holds/post-hold`；直接用 `/studio_panels/set-gauge` 改线而未重新签认时，关注线与分析簿快照不一致同样拒绝立挡。
+- 立挡时把当时关注线快照写入 `practice_holds.control_band`；`/practice_holds/clear-hold` 按该立挡时关注线核验复测读数，历史无快照围挡才退回现行关注线。
+
 ## 启动
 
 ```sh

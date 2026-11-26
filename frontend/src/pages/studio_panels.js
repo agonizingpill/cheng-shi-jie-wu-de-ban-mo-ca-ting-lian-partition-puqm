@@ -43,6 +43,10 @@
     {
       "name": "control_band",
       "label": "演练关注线"
+    },
+    {
+      "name": "active_review",
+      "label": "现行签认分析"
     }
   ],
   "layout": "split",

@@ -43,6 +43,10 @@
     {
       "name": "retest",
       "label": "复测踏点"
+    },
+    {
+      "name": "control_band",
+      "label": "立挡时关注线"
     }
   ],
   "layout": "split",

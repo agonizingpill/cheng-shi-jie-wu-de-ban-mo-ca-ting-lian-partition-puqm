@@ -12,6 +12,7 @@ optics_surveys = Table('optics_surveys', metadata,
     Column('clusters', Integer, nullable=False),
     Column('noise', Integer, nullable=False),
     Column('token', String(64), nullable=False, unique=True),
+    Column('control_band', Float, nullable=True),
     CheckConstraint('clusters >= 0'),
     CheckConstraint('noise >= 0'),
 )

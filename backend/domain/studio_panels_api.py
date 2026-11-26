@@ -23,3 +23,13 @@ def set_gauge(data: SetGauge, user=Depends(actor)):
         output = service.set_gauge(conn, user, data)
         record(conn, user, 'studio_panels.set_gauge')
         return output
+
+
+@router.post('/studio_panels/trial-gauge')
+@router.post('/studio_panels/try-gauge')
+@router.post('/studio_panels/preview-gauge')
+@router.post('/studio_panels/trial-band')
+def trial_gauge(data: SetGauge, user=Depends(actor)):
+    allow(user, ('operator', 'reviewer'))
+    with transaction() as conn:
+        return service.preview_gauge(conn, user, data)
